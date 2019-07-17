@@ -172,6 +172,40 @@ public:
 //                contour_points.y = object_list[i].getFilteredObjectAttributes().getContourPoints()[j].getY()/100.0;
 //                object.contour.push_back(contour_points);
 //            }
+            object.track_id = object_list[i].getObjectId();
+            object.linear_velocity.x = object_list[i].getFilteredObjectAttributes().getRelativeVelocity().getX()/100.0;
+            object.linear_velocity.y = object_list[i].getFilteredObjectAttributes().getRelativeVelocity().getY()/100.0;
+            object.linear_velocity.y = 0;
+            object.linear_acceleration.x = 0;
+            object.linear_acceleration.y = 0;
+            object.linear_acceleration.z = 0;
+ 
+
+            geometry_msgs::Point32 p0,p1,p2,p3;
+            p0.x = object.reference_points[2].x;
+            p1.x = object.reference_points[3].x;
+            p2.x = object.reference_points[4].x;
+            p3.x = object.reference_points[1].x;
+            p0.y = object.reference_points[2].y;
+            p1.y = object.reference_points[3].y;
+            p2.y = object.reference_points[4].y;
+            p3.y = object.reference_points[1].y;
+            //temporarily give z a value of width for calibration's convenience
+            p0.z = object.object_box_height;
+            p1.z = 0;
+            p2.z = 0;
+            p3.z = object.object_box_height;
+            /*Scala reference point for a obstacle is like below:
+            1**5**2
+            8**9**6
+            4**7**3
+            */
+            object.track_shape.points.clear();
+            object.track_shape.points.push_back(p0);
+            object.track_shape.points.push_back(p1);
+            object.track_shape.points.push_back(p2);
+            object.track_shape.points.push_back(p3);
+
             object_array.objects.push_back(object);
 //           ROS_INFO("object ID before publish %d",object.id);
         }
