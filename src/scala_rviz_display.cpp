@@ -30,7 +30,7 @@ void ScalaRvizDisplay::Init(){
     sub_pointcloud = nh.subscribe("/scala_points", 1, &ScalaRvizDisplay::PointCloudCallback, this);
     sub_dynamic_objects = nh.subscribe("/scala_objects", 1, &ScalaRvizDisplay::ObjectsCallback, this);
     sub_fix = nh.subscribe("/Inertial/gps/fix", 1, &ScalaRvizDisplay::GpsCallback, this);
-    sub_heading = nh.subscribe("/Inertial/heading", 1, &ScalaRvizDisplay::HeadingCallback, this);
+    //sub_heading = nh.subscribe("/Inertial/heading", 1, &ScalaRvizDisplay::HeadingCallback, this);
     sub_velocity = nh.subscribe("/Inertial/gps/vel", 1, &ScalaRvizDisplay::VelocityCallback, this);
     sub_pose = nh.subscribe("/pose", 1, &ScalaRvizDisplay::PoseCallback, this);
 
@@ -46,11 +46,11 @@ void ScalaRvizDisplay::Init(){
 
     tf_listener_map = new tf::TransformListener();
 
-    pcl::io::loadPLYFile<pcl::PointXYZ>("/home/guolindong/cyberfly_ws/src/ibeo_scala/tiggo_sjtu_map - Cloud.ply", *global_map);
+    pcl::io::loadPLYFile<pcl::PointXYZ>("/home/bryan/catkin_ws_ibeo3/src/ibeo_scala/tiggo_sjtu_map - Cloud.ply", *global_map);
 
     //road_file.open("/home/guolindong/cyberfly_ws/src/ibeo_scala/road.txt");
 
-    ifstream infile("/home/guolindong/cyberfly_ws/src/ibeo_scala/road_sjtu.txt", ios::in);
+    ifstream infile("/home/bryan/catkin_ws_ibeo3/src/ibeo_scala/road_sjtu.txt", ios::in);
     path.header.frame_id = "map";
 
     if(infile.good()) {
@@ -92,7 +92,7 @@ void ScalaRvizDisplay::PointCloudCallback(const sensor_msgs::PointCloud2& msg){
 //    pcl::fromROSMsg(msg, *points_pcl);
 //    pcl::toROSMsg(*points_pcl, points);
     points.header.stamp = ros::Time::now();
-    points.header.frame_id = "scala";
+    points.header.frame_id = "conti_bumper_radar";
     pub_points.publish(points);
 
     //save point cloud
@@ -119,27 +119,27 @@ void ScalaRvizDisplay::PointCloudCallback(const sensor_msgs::PointCloud2& msg){
 void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     jsk_recognition_msgs::BoundingBoxArray box_array;
     box_array.header.stamp = ros::Time::now();
-    box_array.header.frame_id = "/objects";
+    box_array.header.frame_id = "conti_bumper_radar";
     jsk_recognition_msgs::BoundingBox box_object;
-    box_object.header.frame_id = "/objects";
+    box_object.header.frame_id = "conti_bumper_radar";
     box_object.header.stamp = ros::Time::now();
 
     visualization_msgs::MarkerArray text_array;
     visualization_msgs::Marker text_object;
-    text_object.header.frame_id = "/objects";
+    text_object.header.frame_id = "conti_bumper_radar";
     text_object.header.stamp = ros::Time::now();
     text_object.ns = "object_state";
     text_object.action = visualization_msgs::Marker::MODIFY;
     text_object.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
     text_object.scale.z = 0.7;
-    text_object.color.r = 200;
-    text_object.color.g = 200;
-    text_object.color.b = 200;
+    text_object.color.r = 100;
+    text_object.color.g = 0;
+    text_object.color.b = 100;
     text_object.color.a = 1;
 
     visualization_msgs::MarkerArray arrow_array;
     visualization_msgs::Marker arrow_object;
-    arrow_object.header.frame_id = "/objects";
+    arrow_object.header.frame_id = "conti_bumper_radar";
     arrow_object.header.stamp = ros::Time::now();
     arrow_object.type = visualization_msgs::Marker::ARROW;
     arrow_object.scale.y = 0.05;
@@ -264,9 +264,9 @@ void ScalaRvizDisplay::GpsCallback(const sensor_msgs::NavSatFix& msg){
     vehicle_y = y;
 }
 
-void ScalaRvizDisplay::HeadingCallback(const tiggo_msgs::Heading& msg){
-    heading = msg.data;
-}
+//void ScalaRvizDisplay::HeadingCallback(const tiggo_msgs::Heading& msg){
+//    heading = msg.data;
+//}
 
 void ScalaRvizDisplay::VelocityCallback(const geometry_msgs::TwistWithCovarianceStamped& msg){
     double vx = msg.twist.twist.linear.x;
@@ -283,7 +283,7 @@ void ScalaRvizDisplay::PoseCallback(const geometry_msgs::PoseStamped &msg) {
     transform.setOrigin( tf::Vector3(msg.pose.position.x, msg.pose.position.y, msg.pose.position.z) );
     transform.setRotation(q);
     br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "base_link"));
-//    printf("pose_callback_over\n");
+    printf("pose_callback_over\n");
     path.header.stamp = ros::Time::now();
     pub_trajectory.publish(path);
 }

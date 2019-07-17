@@ -97,7 +97,7 @@ public:
         {
             scanpoint = subscan[i].getScanPoints();
             int scan_point_size = scanpoint.size();
-            //printf("points num: %i\n", scan_point_size);
+//            printf("points num: %i\n", scan_point_size);
 
             for(int j = 0; j < scan_point_size; ++j)
             {
@@ -129,7 +129,7 @@ public:
 
         sensor_msgs::PointCloud2 cloud_to_pub;
         pcl::toROSMsg(*scala_cloud, cloud_to_pub);//pcl::toROSMsg() should be done before setting frame_id
-        cloud_to_pub.header.frame_id = "scala";
+        cloud_to_pub.header.frame_id = "conti_bumper_radar";
         cloud_to_pub.header.stamp = ros::Time::now();
 
         pub_scala_points.publish(cloud_to_pub);
@@ -151,8 +151,8 @@ public:
             object.dynamic_flag = object_list[i].getFilteredObjectAttributes().getDynamicFlag();
             object.velocity_absolute.x = object_list[i].getFilteredObjectAttributes().getAbsoluteVelocity().getX()/100.0;
             object.velocity_absolute.y = object_list[i].getFilteredObjectAttributes().getAbsoluteVelocity().getY()/100.0;
-//            object.velocity_relative.x = object_list[i].getFilteredObjectAttributes().getRelativeVelocity().getX()/100.0;
-//            object.velocity_relative.y = object_list[i].getFilteredObjectAttributes().getRelativeVelocity().getY()/100.0;
+            object.velocity_relative.x = object_list[i].getFilteredObjectAttributes().getRelativeVelocity().getX()/100.0;
+            object.velocity_relative.y = object_list[i].getFilteredObjectAttributes().getRelativeVelocity().getY()/100.0;
             object.object_closest.x = object_list[i].getFilteredObjectAttributes().getPositionClosestObjectPoint().getX()/100.0;
             object.object_closest.y = object_list[i].getFilteredObjectAttributes().getPositionClosestObjectPoint().getY()/100.0;
             for (int k = 0; k < 10; ++k) {
@@ -173,9 +173,11 @@ public:
 //                object.contour.push_back(contour_points);
 //            }
             object_array.objects.push_back(object);
+//           ROS_INFO("object ID before publish %d",object.id);
         }
-        object_array.header.frame_id = "scala";
+        object_array.header.frame_id = "conti_bumper_radar";
         object_array.header.stamp = ros::Time::now();
+        
         pub_scala_objects.publish(object_array);
     }
 
