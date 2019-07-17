@@ -149,7 +149,7 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     arrow_object.color.b = 180;
     arrow_object.color.a = 1;
 
-    float vx, vy, vz, velocity;
+    float vx, vy, vz, velocity, distance;
     float roll, pitch, yaw;
     roll = 0.0;
     pitch = 0.0;
@@ -219,14 +219,19 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         }
 
         //object state text
-        text_object.id = i;
+        text_object.track_id = i;
         SetPosition(text_object.pose, obj.reference_points[9].x, obj.reference_points[9].y, (float)1.0);
+        distance = sqrt((obj.reference_points[9].x)*(obj.reference_points[9].x) + (obj.reference_points[9].y)*(obj.reference_points[9].y));
         std::ostringstream str;
-        str<<"Id:"<<obj.id<<std::endl
+        /*str<<"Id:"<<obj.id<<std::endl
            <<"Age:"<<obj.age<<std::endl
            <<"DyF:"<<dynamic_flag<<std::endl
            <<"Vel:"<<velocity<<std::endl
-           <<"Cls:"<<obj_class;
+           <<"Cls:"<<obj_class;*/
+
+        //Need to use Marker to show 4 points for an object
+        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<velocity<<" Dist:"<<distance;
+
         text_object.text=str.str();
         if(dynamic_flag.size()>1){
             text_array.markers.push_back(text_object);
