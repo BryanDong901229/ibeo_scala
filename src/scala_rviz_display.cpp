@@ -117,12 +117,12 @@ void ScalaRvizDisplay::PointCloudCallback(const sensor_msgs::PointCloud2& msg){
 }
 
 void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
-    jsk_recognition_msgs::BoundingBoxArray box_array;
+    /*jsk_recognition_msgs::BoundingBoxArray box_array;
     box_array.header.stamp = ros::Time::now();
     box_array.header.frame_id = "conti_bumper_radar";
     jsk_recognition_msgs::BoundingBox box_object;
     box_object.header.frame_id = "conti_bumper_radar";
-    box_object.header.stamp = ros::Time::now();
+    box_object.header.stamp = ros::Time::now();*/
 
     visualization_msgs::MarkerArray text_array;
     visualization_msgs::Marker text_object;
@@ -213,7 +213,7 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         //object boxes
         yaw = obj.object_box_orientation/180.0*Pi;//box orientation fill e.yaw
         orientation = EulerToQuaternion(roll, pitch, yaw);
-        SetQuaternion(box_object.pose, orientation);
+        /*SetQuaternion(box_object.pose, orientation);
         SetPosition(box_object.pose, obj.reference_points[0].x, obj.reference_points[0].y, (float)0.0);
 //        double obj_width = GetDistance(obj.reference_points[1].x, obj.reference_points[1].y,
 //                                       obj.reference_points[2].x, obj.reference_points[2].y);
@@ -230,7 +230,7 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         box_object.value = obj.id;
         if(box_object.dimensions.x>0 &&box_object.dimensions.y>0 ){
             box_array.boxes.push_back(box_object);
-        }
+        }*/
 
         //object state text
         text_object.id= i;
@@ -273,9 +273,9 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
 
     }
 
-    pub_dynamic_objects_box.publish(box_array);
-    pub_marker_text.publish(text_array);
-    pub_marker_arrow.publish(arrow_array);
+    //pub_dynamic_objects_box.publish(box_array);
+    //pub_marker_text.publish(text_array);
+    //pub_marker_arrow.publish(arrow_array);
     //Fix the bug that marker not go away after related objects disappear
     visualization_msgs::MarkerArray markerarray_clean;
     visualization_msgs::Marker marker_clean;
