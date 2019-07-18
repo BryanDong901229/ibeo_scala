@@ -41,7 +41,7 @@
 #include <pcl/filters/filter.h>
 #include <pcl/filters/passthrough.h>
 
-#include <tiggo_msgs/Heading.h>
+//#include <tiggo_msgs/Heading.h>
 #include <ibeo_scala/ObjectArray.h>
 #include <ibeo_scala/Object.h>
 
@@ -54,7 +54,7 @@ public:
     void PointCloudCallback(const sensor_msgs::PointCloud2& msg);
     void ObjectsCallback(const ibeo_scala::ObjectArray& msg);
     void GpsCallback(const sensor_msgs::NavSatFix& msg);
-    void HeadingCallback(const tiggo_msgs::Heading& msg);
+    //void HeadingCallback(const tiggo_msgs::Heading& msg);
     void VelocityCallback(const geometry_msgs::TwistWithCovarianceStamped& msg);
     void Gps2Meter(double lon, double lat, double &out_x, double &out_y);
     template <typename T> std::vector<T> EulerToQuaternion(T roll, T pitch, T yaw);

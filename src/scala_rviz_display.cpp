@@ -149,6 +149,20 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     arrow_object.color.b = 180;
     arrow_object.color.a = 1;
 
+    visualization_msgs::MarkerArray scalar_array;
+    visualization_msgs::Marker scala_object;
+    scala_object.header.frame_id = "conti_bumper_radar";
+    scala_object.header.stamp = ros::Time::now();
+    scala_object.type = visualization_msgs::Marker::CYLINDER;
+    scala_object.scale.y = 0.05;
+    scala_object.scale.z = 0.05;
+    scala_object.color.r = 180;
+    scala_object.color.g = 0;
+    scala_object.color.b = 180;
+    scala_object.color.a = 1;
+
+
+
     float vx, vy, vz, velocity, distance;
     float roll, pitch, yaw;
     roll = 0.0;
@@ -219,7 +233,7 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         }
 
         //object state text
-        text_object.track_id = i;
+        text_object.id= i;
         SetPosition(text_object.pose, obj.reference_points[9].x, obj.reference_points[9].y, (float)1.0);
         distance = sqrt((obj.reference_points[9].x)*(obj.reference_points[9].x) + (obj.reference_points[9].y)*(obj.reference_points[9].y));
         std::ostringstream str;
@@ -246,12 +260,31 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         if(dynamic_flag.size()>1) {
             arrow_array.markers.push_back(arrow_object);
         }
+
+        //scala object
+        scala_object.id = i;
+        SetPosition(scala_object.pose, obj.reference_points[9].x, obj.reference_points[9].y, obj.object_box_height);
+        orientation = EulerToQuaternion(roll, pitch, atan2(vy, vx));
+        SetQuaternion(scala_object.pose, orientation);
+        scala_object.scale.x = velocity;
+        if(dynamic_flag.size()>1) {
+            scalar_array.markers.push_back(scala_object);
+        }
+
     }
 
     pub_dynamic_objects_box.publish(box_array);
     pub_marker_text.publish(text_array);
     pub_marker_arrow.publish(arrow_array);
-
+    //Fix the bug that marker not go away after related objects disappear
+    visualization_msgs::MarkerArray markerarray_clean;
+    visualization_msgs::Marker marker_clean;
+    marker_clean.action = visualization_msgs::Marker::DELETEALL;
+    markerarray_clean.markers.push_back(marker_clean);
+    pub_marker_text.publish(markerarray_clean);
+    pub_marker_text.publish(text_array);
+    pub_marker_arrow.publish(markerarray_clean);
+    pub_marker_arrow.publish(arrow_array);
 }
 
 void ScalaRvizDisplay::GpsCallback(const sensor_msgs::NavSatFix& msg){

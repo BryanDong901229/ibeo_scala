@@ -175,7 +175,7 @@ public:
             object.track_id = object_list[i].getObjectId();
             object.linear_velocity.x = object_list[i].getFilteredObjectAttributes().getRelativeVelocity().getX()/100.0;
             object.linear_velocity.y = object_list[i].getFilteredObjectAttributes().getRelativeVelocity().getY()/100.0;
-            object.linear_velocity.y = 0;
+            object.linear_velocity.z = 0;
             object.linear_acceleration.x = 0;
             object.linear_acceleration.y = 0;
             object.linear_acceleration.z = 0;
