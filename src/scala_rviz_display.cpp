@@ -5,6 +5,11 @@
 #include "scala_rviz_display.h"
 
 using namespace std;
+double radar_color_alpha = 0.4;
+
+double detection_scalar_x = 1.0;
+double detection_scalar_y = 1.0;
+double detection_scalar_z = 3.0;
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr global_map(new pcl::PointCloud<pcl::PointXYZ>);
 int step = 0;
@@ -39,8 +44,10 @@ void ScalaRvizDisplay::Init(){
     pub_pose = nh.advertise<geometry_msgs::PoseStamped>("pose", 1);
     pub_marker_text = nh.advertise<visualization_msgs::MarkerArray>("objects_text", 1);
     pub_dynamic_objects_pose = nh.advertise<jsk_recognition_msgs::BoundingBoxArray>("objects_pose", 1);
-    pub_dynamic_objects_box = nh.advertise<jsk_recognition_msgs::BoundingBoxArray>("objects_box", 1);
+    //pub_dynamic_objects_box = nh.advertise<jsk_recognition_msgs::BoundingBoxArray>("objects_box", 1);
+
     pub_marker_arrow = nh.advertise<visualization_msgs::MarkerArray>("objects_arrow", 1);
+    pub_marker_scala = nh.advertise<visualization_msgs::MarkerArray>("objects_scala", 1);
     pub_points = nh.advertise<sensor_msgs::PointCloud2>("points",1);
     pub_global_map = nh.advertise<sensor_msgs::PointCloud2>("global_map",1);
 
@@ -131,10 +138,11 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     text_object.ns = "object_state";
     text_object.action = visualization_msgs::Marker::MODIFY;
     text_object.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
-    text_object.scale.z = 0.7;
-    text_object.color.r = 100;
-    text_object.color.g = 0;
-    text_object.color.b = 100;
+    text_object.action = visualization_msgs::Marker::ADD;
+    text_object.scale.z = 1;
+    text_object.color.r = 1;
+    text_object.color.g = 1;
+    text_object.color.b = 1;
     text_object.color.a = 1;
 
     visualization_msgs::MarkerArray arrow_array;
@@ -142,6 +150,7 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     arrow_object.header.frame_id = "conti_bumper_radar";
     arrow_object.header.stamp = ros::Time::now();
     arrow_object.type = visualization_msgs::Marker::ARROW;
+    arrow_object.action = visualization_msgs::Marker::ADD;
     arrow_object.scale.y = 0.05;
     arrow_object.scale.z = 0.05;
     arrow_object.color.r = 180;
@@ -154,12 +163,14 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     scala_object.header.frame_id = "conti_bumper_radar";
     scala_object.header.stamp = ros::Time::now();
     scala_object.type = visualization_msgs::Marker::CYLINDER;
-    scala_object.scale.y = 0.05;
-    scala_object.scale.z = 0.05;
-    scala_object.color.r = 180;
+    scala_object.action = visualization_msgs::Marker::ADD;
+    scala_object.color.r = 100;
     scala_object.color.g = 0;
-    scala_object.color.b = 180;
-    scala_object.color.a = 1;
+    scala_object.color.b = 100;
+    scala_object.color.a = radar_color_alpha;
+    scala_object.scale.x = detection_scalar_x;
+    scala_object.scale.y = detection_scalar_y;
+    scala_object.scale.z = detection_scalar_z;
 
 
 
@@ -266,7 +277,7 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         SetPosition(scala_object.pose, obj.reference_points[9].x, obj.reference_points[9].y, obj.object_box_height);
         orientation = EulerToQuaternion(roll, pitch, atan2(vy, vx));
         SetQuaternion(scala_object.pose, orientation);
-        scala_object.scale.x = velocity;
+
         if(dynamic_flag.size()>1) {
             scalar_array.markers.push_back(scala_object);
         }
@@ -285,6 +296,8 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     pub_marker_text.publish(text_array);
     pub_marker_arrow.publish(markerarray_clean);
     pub_marker_arrow.publish(arrow_array);
+    pub_marker_scala.publish(markerarray_clean);
+    pub_marker_scala.publish(scalar_array);
 }
 
 void ScalaRvizDisplay::GpsCallback(const sensor_msgs::NavSatFix& msg){

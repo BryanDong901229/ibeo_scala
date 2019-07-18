@@ -1,5 +1,3 @@
-// 2018-08-23 CyberC3@SJTU
-
 #define Pi (3.14159265)
 
 #include <cstdlib>

@@ -83,7 +83,8 @@ public:
     ros::Publisher pub_marker_text;
     ros::Publisher pub_marker_arrow;
     ros::Publisher pub_dynamic_objects_pose;
-    ros::Publisher pub_dynamic_objects_box;
+    //ros::Publisher pub_dynamic_objects_box;
+    ros::Publisher pub_marker_scala;
     ros::Publisher pub_points;
     ros::Publisher pub_global_map;
 
