@@ -247,7 +247,7 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         text_object.id= i;
         SetPosition(text_object.pose, obj.reference_points[9].x, obj.reference_points[9].y, (float)1.0);
         distance = sqrt((obj.reference_points[9].x)*(obj.reference_points[9].x) + (obj.reference_points[9].y)*(obj.reference_points[9].y));
-        std::ostringstream str;
+        std::ostringstream str,scala_distance,scala_velocity;
         /*str<<"Id:"<<obj.id<<std::endl
            <<"Age:"<<obj.age<<std::endl
            <<"DyF:"<<dynamic_flag<<std::endl
@@ -255,7 +255,18 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
            <<"Cls:"<<obj_class;*/
 
         //Need to use Marker to show 4 points for an object
-        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<velocity<<" Dist:"<<distance;
+        scala_distance << std::setprecision(2) << distance;
+        scala_velocity << std::setprecision(2) << velocity;
+        //str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<scala_velocity.str()<<" Dist:"<<scala_distance.str();
+        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance);
+        /*str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<std::endl
+           <<"P0:[x,]:" <<obj.track_shape.points[0].x<<","<<obj.track_shape.points[0].y<<std::endl
+           <<"P1:[x,]:" <<obj.track_shape.points[1].x<<","<<obj.track_shape.points[1].y<<std::endl
+           <<"P2:[x,]:" <<obj.track_shape.points[2].x<<","<<obj.track_shape.points[2].y<<std::endl
+           <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y<<std::endl
+           <<"height:"<<obj.object_box_height;*/
+       
+
 
         text_object.text=str.str();
         if(dynamic_flag.size()>1){
