@@ -59,6 +59,8 @@ public:
     //ibeo_scala::ObjectArray object_array;
 
     float min_distance;
+    //give each object a height of object_height for convenience during calibration. unit: meter
+    float object_height = 1.0;
 
     AllScalaListener()
     {
@@ -180,19 +182,29 @@ public:
  
 
             geometry_msgs::Point32 p0,p1,p2,p3;
-            p0.x = object.reference_points[2].x;
+            /*p0.x = object.reference_points[2].x;
             p1.x = object.reference_points[3].x;
             p2.x = object.reference_points[4].x;
             p3.x = object.reference_points[1].x;
             p0.y = object.reference_points[2].y;
             p1.y = object.reference_points[3].y;
             p2.y = object.reference_points[4].y;
-            p3.y = object.reference_points[1].y;
-            //temporarily give z a value of width for calibration's convenience
-            p0.z = object.object_box_height;
+            p3.y = object.reference_points[1].y;*/
+
+            //temporarily give z a value of width for calibration's convenience and use bigger value between object length and width as object width
+            p0.x = object.reference_points[9].x;
+            p1.x = object.reference_points[9].x;
+            p2.x = object.reference_points[9].x;
+            p3.x = object.reference_points[9].x;
+            p0.y = object.reference_points[9].y-(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y);
+            p1.y = object.reference_points[9].y-(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y);
+            p2.y = object.reference_points[9].y+(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y);
+            p3.y = object.reference_points[9].y+(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y);
+            
+            p0.z = object_height;
             p1.z = 0;
             p2.z = 0;
-            p3.z = object.object_box_height;
+            p3.z = object_height;
             /*Scala reference point for a obstacle is like below:
             1**5**2
             8**9**6
@@ -204,7 +216,7 @@ public:
             object.track_shape.points.push_back(p2);
             object.track_shape.points.push_back(p3);
 
-            object_array.objects.push_back(object);
+            object_array.tracks.push_back(object);
 //           ROS_INFO("object ID before publish %d",object.id);
         }
         object_array.header.frame_id = "conti_bumper_radar";

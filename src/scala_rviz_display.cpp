@@ -11,7 +11,7 @@ double detection_scalar_x = 1.0;
 double detection_scalar_y = 1.0;
 double detection_scalar_z = 3.0;
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr global_map(new pcl::PointCloud<pcl::PointXYZ>);
+//pcl::PointCloud<pcl::PointXYZ>::Ptr global_map(new pcl::PointCloud<pcl::PointXYZ>);
 int step = 0;
 int objects_number_previous = 0;
 int objects_eff_number_counter = 0;
@@ -49,15 +49,15 @@ void ScalaRvizDisplay::Init(){
     pub_marker_arrow = nh.advertise<visualization_msgs::MarkerArray>("objects_arrow", 1);
     pub_marker_scala = nh.advertise<visualization_msgs::MarkerArray>("objects_scala", 1);
     pub_points = nh.advertise<sensor_msgs::PointCloud2>("points",1);
-    pub_global_map = nh.advertise<sensor_msgs::PointCloud2>("global_map",1);
+    //pub_global_map = nh.advertise<sensor_msgs::PointCloud2>("global_map",1);
 
     tf_listener_map = new tf::TransformListener();
 
-    pcl::io::loadPLYFile<pcl::PointXYZ>("/home/bryan/catkin_ws_ibeo3/src/ibeo_scala/tiggo_sjtu_map - Cloud.ply", *global_map);
+    //pcl::io::loadPLYFile<pcl::PointXYZ>("/home/bryan/catkin_ws_ibeo3/src/ibeo_scala/tiggo_sjtu_map - Cloud.ply", *global_map);
 
     //road_file.open("/home/guolindong/cyberfly_ws/src/ibeo_scala/road.txt");
 
-    ifstream infile("/home/bryan/catkin_ws_ibeo3/src/ibeo_scala/road_sjtu.txt", ios::in);
+    /*ifstream infile("/home/bryan/catkin_ws_ibeo3/src/ibeo_scala/road_sjtu.txt", ios::in);
     path.header.frame_id = "map";
 
     if(infile.good()) {
@@ -86,7 +86,7 @@ void ScalaRvizDisplay::Init(){
         }
     }
     infile.close();
-    ROS_INFO("infile closed");
+    ROS_INFO("infile closed");*/
 
 }
 
@@ -178,10 +178,10 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     float roll, pitch, yaw;
     roll = 0.0;
     pitch = 0.0;
-    int objects_number = msg.objects.size();
+    int objects_number = msg.tracks.size();
 
     for (int i = 0; i < objects_number; i++) {
-        ibeo_scala::Object obj = msg.objects[i];
+        ibeo_scala::Object obj = msg.tracks[i];
         if(obj.age<6) continue;
         vector<float> orientation; //w,x,y,z
         vx = obj.velocity_absolute.x;
@@ -265,7 +265,21 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
            <<"P2:[x,]:" <<obj.track_shape.points[2].x<<","<<obj.track_shape.points[2].y<<std::endl
            <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y<<std::endl
            <<"height:"<<obj.object_box_height;*/
-       
+        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<std::endl
+           <<"P0:[x,]:" <<obj.track_shape.points[0].x<<","<<obj.track_shape.points[0].y<<std::endl
+           <<"P1:[x,]:" <<obj.track_shape.points[1].x<<","<<obj.track_shape.points[1].y<<std::endl
+           <<"P2:[x,]:" <<obj.track_shape.points[2].x<<","<<obj.track_shape.points[2].y<<std::endl
+           <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y<<std::endl
+           <<"0:[x,]:" <<obj.reference_points[0].x<<","<<obj.reference_points[0].y<<std::endl
+           <<"1:[x,]:" <<obj.reference_points[1].x<<","<<obj.reference_points[1].y<<std::endl
+           <<"2:[x,]:" <<obj.reference_points[2].x<<","<<obj.reference_points[2].y<<std::endl
+           <<"3:[x,]:" <<obj.reference_points[3].x<<","<<obj.reference_points[3].y<<std::endl
+           <<"4:[x,]:" <<obj.reference_points[4].x<<","<<obj.reference_points[4].y<<std::endl
+           <<"5:[x,]:" <<obj.reference_points[5].x<<","<<obj.reference_points[5].y<<std::endl
+           <<"6:[x,]:" <<obj.reference_points[6].x<<","<<obj.reference_points[6].y<<std::endl
+           <<"7:[x,]:" <<obj.reference_points[7].x<<","<<obj.reference_points[7].y<<std::endl
+           <<"8:[x,]:" <<obj.reference_points[8].x<<","<<obj.reference_points[8].y<<std::endl
+           <<"9:[x,]:" <<obj.reference_points[9].x<<","<<obj.reference_points[9].y;
 
 
         text_object.text=str.str();
@@ -470,7 +484,7 @@ int main(int argc, char **argv)
 
         //publish global map
         if(true) {
-            pcl::PointCloud<pcl::PointXYZ>::Ptr extracted_map (new pcl::PointCloud<pcl::PointXYZ>);
+            /*pcl::PointCloud<pcl::PointXYZ>::Ptr extracted_map (new pcl::PointCloud<pcl::PointXYZ>);
             pcl::PassThrough<pcl::PointXYZ> pass;
             pass.setInputCloud (global_map);//这个参数得是指针，类对象不行
             pass.setFilterFieldName ("x");//设置想在哪个坐标轴上操作
@@ -488,7 +502,7 @@ int main(int argc, char **argv)
             pcl::toROSMsg(*extracted_map, scala_rviz_dispplay.map);
             scala_rviz_dispplay.map.header.frame_id = "map";
             scala_rviz_dispplay.map.header.stamp = ros::Time::now();
-            scala_rviz_dispplay.pub_global_map.publish(scala_rviz_dispplay.map);
+            scala_rviz_dispplay.pub_global_map.publish(scala_rviz_dispplay.map);*/
         }
 
         spinner.spin();
