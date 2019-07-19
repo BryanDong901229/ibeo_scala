@@ -196,10 +196,10 @@ public:
             p1.x = object.reference_points[9].x;
             p2.x = object.reference_points[9].x;
             p3.x = object.reference_points[9].x;
-            p0.y = object.reference_points[9].y-(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y);
-            p1.y = object.reference_points[9].y-(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y);
-            p2.y = object.reference_points[9].y+(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y);
-            p3.y = object.reference_points[9].y+(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y);
+            p0.y = object.reference_points[9].y-(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y)/2;
+            p1.y = object.reference_points[9].y-(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y)/2;
+            p2.y = object.reference_points[9].y+(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y)/2;
+            p3.y = object.reference_points[9].y+(object.object_box_size.x>object.object_box_size.y ? object.object_box_size.x:object.object_box_size.y)/2;
             
             p0.z = object_height;
             p1.z = 0;

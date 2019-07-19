@@ -258,28 +258,13 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         scala_distance << std::setprecision(2) << distance;
         scala_velocity << std::setprecision(2) << velocity;
         //str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<scala_velocity.str()<<" Dist:"<<scala_distance.str();
-        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance);
-        /*str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<std::endl
+        float object_size = obj.object_box_size.x>obj.object_box_size.y ? obj.object_box_size.x:obj.object_box_size.y;
+        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<" Size:"<<object_size;
+        /*str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<"Size"<<object_size<<std::endl
            <<"P0:[x,]:" <<obj.track_shape.points[0].x<<","<<obj.track_shape.points[0].y<<std::endl
            <<"P1:[x,]:" <<obj.track_shape.points[1].x<<","<<obj.track_shape.points[1].y<<std::endl
            <<"P2:[x,]:" <<obj.track_shape.points[2].x<<","<<obj.track_shape.points[2].y<<std::endl
-           <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y<<std::endl
-           <<"height:"<<obj.object_box_height;*/
-        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<std::endl
-           <<"P0:[x,]:" <<obj.track_shape.points[0].x<<","<<obj.track_shape.points[0].y<<std::endl
-           <<"P1:[x,]:" <<obj.track_shape.points[1].x<<","<<obj.track_shape.points[1].y<<std::endl
-           <<"P2:[x,]:" <<obj.track_shape.points[2].x<<","<<obj.track_shape.points[2].y<<std::endl
-           <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y<<std::endl
-           <<"0:[x,]:" <<obj.reference_points[0].x<<","<<obj.reference_points[0].y<<std::endl
-           <<"1:[x,]:" <<obj.reference_points[1].x<<","<<obj.reference_points[1].y<<std::endl
-           <<"2:[x,]:" <<obj.reference_points[2].x<<","<<obj.reference_points[2].y<<std::endl
-           <<"3:[x,]:" <<obj.reference_points[3].x<<","<<obj.reference_points[3].y<<std::endl
-           <<"4:[x,]:" <<obj.reference_points[4].x<<","<<obj.reference_points[4].y<<std::endl
-           <<"5:[x,]:" <<obj.reference_points[5].x<<","<<obj.reference_points[5].y<<std::endl
-           <<"6:[x,]:" <<obj.reference_points[6].x<<","<<obj.reference_points[6].y<<std::endl
-           <<"7:[x,]:" <<obj.reference_points[7].x<<","<<obj.reference_points[7].y<<std::endl
-           <<"8:[x,]:" <<obj.reference_points[8].x<<","<<obj.reference_points[8].y<<std::endl
-           <<"9:[x,]:" <<obj.reference_points[9].x<<","<<obj.reference_points[9].y;
+           <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y;*/
 
 
         text_object.text=str.str();
