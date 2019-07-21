@@ -1,7 +1,3 @@
-//
-// Created by guolindong on 18-10-12.
-//
-
 #ifndef PROJECT_SCALA_RVIZ_DISPLAY_H
 #define PROJECT_SCALA_RVIZ_DISPLAY_H
 
@@ -54,9 +50,7 @@ public:
     void PointCloudCallback(const sensor_msgs::PointCloud2& msg);
     void ObjectsCallback(const ibeo_scala::ObjectArray& msg);
     void GpsCallback(const sensor_msgs::NavSatFix& msg);
-    //void HeadingCallback(const tiggo_msgs::Heading& msg);
     void VelocityCallback(const geometry_msgs::TwistWithCovarianceStamped& msg);
-    void Gps2Meter(double lon, double lat, double &out_x, double &out_y);
     template <typename T> std::vector<T> EulerToQuaternion(T roll, T pitch, T yaw);
     template <typename T> std::vector<T> QuaternionToEuler(std::vector<T> q);
     template <typename T> void SetPosition(geometry_msgs::Pose &pose, T x, T y, T z);
@@ -83,7 +77,6 @@ public:
     ros::Publisher pub_marker_text;
     ros::Publisher pub_marker_arrow;
     ros::Publisher pub_dynamic_objects_pose;
-    //ros::Publisher pub_dynamic_objects_box;
     ros::Publisher pub_marker_scala;
     ros::Publisher pub_points;
     ros::Publisher pub_global_map;

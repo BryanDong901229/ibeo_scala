@@ -54,14 +54,9 @@ public:
     ros::Publisher pub_scala_points;
     ros::Publisher pub_scala_objects;
     ros::Publisher pub_scala_vehicle_state;
-
-    //ibeo_scala::Object object;
-    //ibeo_scala::ObjectArray object_array;
-
     float min_distance;
     //give each object a height of object_height for convenience during calibration. unit: meter
     float object_height = 1.0;
-
     AllScalaListener()
     {
         pub_scala_points = nh.advertise<sensor_msgs::PointCloud2>("scala_points", 1);
@@ -82,7 +77,7 @@ public:
         //ibeosdk::logInfo << std::setw(5) << fes->getSerializedSize() << " Bytes "
         //                        << "Frame received: # " << fes->getFrameId() << std::endl;
     }
-
+    //2208 is for getting point data from ibeo SDK
     void onData(const ibeosdk::Scan2208* const scanList)
     {
         std::vector<ibeosdk::SubScan2208> subscan = scanList->getSubScans();
@@ -97,8 +92,6 @@ public:
         {
             scanpoint = subscan[i].getScanPoints();
             int scan_point_size = scanpoint.size();
-//            printf("points num: %i\n", scan_point_size);
-
             for(int j = 0; j < scan_point_size; ++j)
             {
                 pcl::PointXYZI point;
@@ -114,10 +107,6 @@ public:
                     int layer = scala_point.getLayerId();//0123
                     double phi = layer * 0.8 - 1.2;
                     point.intensity = scala_point.getEchoPulseWidth();
-                    //for B2.x
-//                    point.z = dis * (sin(DEG2RAD(phi)));
-//                    point.x = dis * (cos(DEG2RAD(phi))) * (cos(DEG2RAD(angle)));
-//                    point.y = dis * (cos(DEG2RAD(phi))) * (sin(DEG2RAD(angle)));
                     //for B3.0
                     point.z = dis * (sin(DEG2RAD(phi)));
                     point.x = dis * -(cos(DEG2RAD(phi))) * (sin(DEG2RAD(angle)));
@@ -128,19 +117,19 @@ public:
         }
 
         sensor_msgs::PointCloud2 cloud_to_pub;
-        pcl::toROSMsg(*scala_cloud, cloud_to_pub);//pcl::toROSMsg() should be done before setting frame_id
+        //pcl::toROSMsg() should be done before setting frame_id
+        pcl::toROSMsg(*scala_cloud, cloud_to_pub);
         cloud_to_pub.header.frame_id = "conti_bumper_radar";
         cloud_to_pub.header.stamp = ros::Time::now();
 
         pub_scala_points.publish(cloud_to_pub);
     }
-
+    //2271 is for getting object information from ibeo SDK
     void onData(const ibeosdk::ObjectListScala2271* const objectList)
     {
         std::vector<ibeosdk::ObjectScala2271> object_list = objectList->getObjects();
         ibeo_scala::ObjectArray object_array;
         int object_list_size = object_list.size();
-//        ROS_INFO("object number: %i", object_list_size);
         for(int i =0; i<object_list_size; ++i)
         {
             ibeo_scala::Object object;
@@ -180,8 +169,13 @@ public:
             object.linear_acceleration.y = 0;
             object.linear_acceleration.z = 0;
  
-
             geometry_msgs::Point32 p0,p1,p2,p3;
+            //Need to debug why  9 points' data from ibeo SDK are the same value
+            /*Scala reference point for a obstacle is like below:
+            1**5**2
+            8**9**6
+            4**7**3
+            */
             /*p0.x = object.reference_points[2].x;
             p1.x = object.reference_points[3].x;
             p2.x = object.reference_points[4].x;
@@ -205,11 +199,7 @@ public:
             p1.z = 0;
             p2.z = 0;
             p3.z = object_height;
-            /*Scala reference point for a obstacle is like below:
-            1**5**2
-            8**9**6
-            4**7**3
-            */
+
             object.track_shape.points.clear();
             object.track_shape.points.push_back(p0);
             object.track_shape.points.push_back(p1);
@@ -217,7 +207,6 @@ public:
             object.track_shape.points.push_back(p3);
 
             object_array.tracks.push_back(object);
-//           ROS_INFO("object ID before publish %d",object.id);
         }
         object_array.header.frame_id = "conti_bumper_radar";
         object_array.header.stamp = ros::Time::now();
@@ -242,8 +231,10 @@ int main(int argc, char **argv)
     ros::NodeHandle pnh("~");
 
     int scala_type;
-    std::string device_destination_ip;//for scala B3
-    std::string device_ip;//for scala B2
+    //for scala B3
+    std::string device_destination_ip;
+    //for scala B2
+    std::string device_ip;
     std::string port;
     std::string log_level;
     std::string multicast_interface_ip;
@@ -275,7 +266,8 @@ int main(int argc, char **argv)
     ss.str(port);
     uint16_t portVal;
     ss >> portVal;
-    const boost::asio::ip::address_v4 interface_ip; //gateway
+    //gateway
+    const boost::asio::ip::address_v4 interface_ip; 
     interface_ip.from_string(multicast_interface_ip);
 
     boost::shared_ptr<ibeosdk::IbeoScala> scala(new ibeosdk::IbeoScala(device_ip,
