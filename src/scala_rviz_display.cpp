@@ -1,7 +1,7 @@
 #include "scala_rviz_display.h"
 
 using namespace std;
-double radar_color_alpha = 0.4;
+double scala_color_alpha = 0.4;
 
 double detection_scalar_x = 1.0;
 double detection_scalar_y = 1.0;
@@ -41,7 +41,7 @@ void ScalaRvizDisplay::PointCloudCallback(const sensor_msgs::PointCloud2& msg){
     if(step==100)step=0;
     sensor_msgs::PointCloud2 points(msg);
     points.header.stamp = ros::Time::now();
-    points.header.frame_id = "conti_bumper_radar";
+    points.header.frame_id = "bumper_scala";
     pub_points.publish(points);
 
 }
@@ -49,7 +49,7 @@ void ScalaRvizDisplay::PointCloudCallback(const sensor_msgs::PointCloud2& msg){
 void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
     visualization_msgs::MarkerArray text_array;
     visualization_msgs::Marker text_object;
-    text_object.header.frame_id = "conti_bumper_radar";
+    text_object.header.frame_id = "bumper_scala";
     text_object.header.stamp = ros::Time::now();
     text_object.ns = "object_state";
     text_object.action = visualization_msgs::Marker::MODIFY;
@@ -63,7 +63,7 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
 
     visualization_msgs::MarkerArray arrow_array;
     visualization_msgs::Marker arrow_object;
-    arrow_object.header.frame_id = "conti_bumper_radar";
+    arrow_object.header.frame_id = "bumper_scala";
     arrow_object.header.stamp = ros::Time::now();
     arrow_object.type = visualization_msgs::Marker::ARROW;
     arrow_object.action = visualization_msgs::Marker::ADD;
@@ -76,14 +76,14 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
 
     visualization_msgs::MarkerArray scalar_array;
     visualization_msgs::Marker scala_object;
-    scala_object.header.frame_id = "conti_bumper_radar";
+    scala_object.header.frame_id = "bumper_scala";
     scala_object.header.stamp = ros::Time::now();
     scala_object.type = visualization_msgs::Marker::CYLINDER;
     scala_object.action = visualization_msgs::Marker::ADD;
     scala_object.color.r = 100;
     scala_object.color.g = 0;
     scala_object.color.b = 100;
-    scala_object.color.a = radar_color_alpha;
+    scala_object.color.a = scala_color_alpha;
     scala_object.scale.x = detection_scalar_x;
     scala_object.scale.y = detection_scalar_y;
     scala_object.scale.z = detection_scalar_z;
@@ -150,13 +150,19 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         scala_distance << std::setprecision(2) << distance;
         scala_velocity << std::setprecision(2) << velocity;
         float object_size = obj.object_box_size.x>obj.object_box_size.y ? obj.object_box_size.x:obj.object_box_size.y;
-        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<" Size:"<<object_size;
+        //str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<" Size:"<<object_size;
         //for debugging
-        /*str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<"Size"<<object_size<<std::endl
-           <<"P0:[x,]:" <<obj.track_shape.points[0].x<<","<<obj.track_shape.points[0].y<<std::endl
+         /*Scala reference point for a obstacle is like below:
+            1**5**2
+            8**9**6
+            4**7**3
+        */
+        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<"Size"<<object_size<<std::endl
            <<"P1:[x,]:" <<obj.track_shape.points[1].x<<","<<obj.track_shape.points[1].y<<std::endl
            <<"P2:[x,]:" <<obj.track_shape.points[2].x<<","<<obj.track_shape.points[2].y<<std::endl
-           <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y;*/
+           <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y<<std::endl
+           <<"P4:[x,]:" <<obj.track_shape.points[4].x<<","<<obj.track_shape.points[4].y<<std::endl
+           <<"P9:[x,]:" <<obj.track_shape.points[9].x<<","<<obj.track_shape.points[9].y;
 
         text_object.text=str.str();
         if(dynamic_flag.size()>1){

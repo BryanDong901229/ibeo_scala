@@ -119,7 +119,7 @@ public:
         sensor_msgs::PointCloud2 cloud_to_pub;
         //pcl::toROSMsg() should be done before setting frame_id
         pcl::toROSMsg(*scala_cloud, cloud_to_pub);
-        cloud_to_pub.header.frame_id = "conti_bumper_radar";
+        cloud_to_pub.header.frame_id = "bumper_scala";
         cloud_to_pub.header.stamp = ros::Time::now();
 
         pub_scala_points.publish(cloud_to_pub);
@@ -208,7 +208,7 @@ public:
 
             object_array.tracks.push_back(object);
         }
-        object_array.header.frame_id = "conti_bumper_radar";
+        object_array.header.frame_id = "bumper_scala";
         object_array.header.stamp = ros::Time::now();
         
         pub_scala_objects.publish(object_array);
