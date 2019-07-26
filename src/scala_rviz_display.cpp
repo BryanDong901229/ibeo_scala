@@ -150,19 +150,24 @@ void ScalaRvizDisplay::ObjectsCallback(const ibeo_scala::ObjectArray& msg){
         scala_distance << std::setprecision(2) << distance;
         scala_velocity << std::setprecision(2) << velocity;
         float object_size = obj.object_box_size.x>obj.object_box_size.y ? obj.object_box_size.x:obj.object_box_size.y;
-        //str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<" Size:"<<object_size;
+        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<" Size:"<<object_size;
         //for debugging
          /*Scala reference point for a obstacle is like below:
             1**5**2
             8**9**6
             4**7**3
         */
-        str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<"Size"<<object_size<<std::endl
+        /*str<<"Id:"<<obj.id<<" Age:"<<obj.age<<" Vel:"<<round(velocity)<<" Dist:"<<round(distance)<<"Size"<<object_size<<std::endl
+           <<"P0:[x,]:" <<obj.track_shape.points[0].x<<","<<obj.track_shape.points[0].y<<std::endl
            <<"P1:[x,]:" <<obj.track_shape.points[1].x<<","<<obj.track_shape.points[1].y<<std::endl
            <<"P2:[x,]:" <<obj.track_shape.points[2].x<<","<<obj.track_shape.points[2].y<<std::endl
            <<"P3:[x,]:" <<obj.track_shape.points[3].x<<","<<obj.track_shape.points[3].y<<std::endl
            <<"P4:[x,]:" <<obj.track_shape.points[4].x<<","<<obj.track_shape.points[4].y<<std::endl
-           <<"P9:[x,]:" <<obj.track_shape.points[9].x<<","<<obj.track_shape.points[9].y;
+           <<"P5:[x,]:" <<obj.track_shape.points[5].x<<","<<obj.track_shape.points[5].y<<std::endl
+           <<"P6:[x,]:" <<obj.track_shape.points[6].x<<","<<obj.track_shape.points[6].y<<std::endl
+           <<"P7:[x,]:" <<obj.track_shape.points[7].x<<","<<obj.track_shape.points[7].y<<std::endl
+           <<"P8:[x,]:" <<obj.track_shape.points[8].x<<","<<obj.track_shape.points[8].y<<std::endl
+           <<"P9:[x,]:" <<obj.track_shape.points[9].x<<","<<obj.track_shape.points[9].y;*/
 
         text_object.text=str.str();
         if(dynamic_flag.size()>1){

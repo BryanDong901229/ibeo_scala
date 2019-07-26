@@ -186,6 +186,7 @@ public:
             p3.y = object.reference_points[1].y;*/
 
             //temporarily give z a value of width for calibration's convenience and use bigger value between object length and width as object width
+            //After vehicle speed and yaw rate is fed to Scala,we could direct use 
             p0.x = object.reference_points[9].x;
             p1.x = object.reference_points[9].x;
             p2.x = object.reference_points[9].x;

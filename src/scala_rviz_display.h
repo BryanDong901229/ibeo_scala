@@ -22,9 +22,9 @@
 #include <geometry_msgs/TwistWithCovarianceStamped.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
-#include <jsk_recognition_msgs/BoundingBox.h>
-#include <jsk_recognition_msgs/BoundingBoxArray.h>
-#include <jsk_rviz_plugins/OverlayText.h>
+//#include <jsk_recognition_msgs/BoundingBox.h>
+//#include <jsk_recognition_msgs/BoundingBoxArray.h>
+//#include <jsk_rviz_plugins/OverlayText.h>
 
 #include <pcl/point_types.h>
 #include <pcl_ros/point_cloud.h>
